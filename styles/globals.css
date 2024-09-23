@@ -1,23 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Matemasie:wght@400;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+
+/* Matemasie font */
+.matemasie-regular {
+  font-family: 'Matemasie', sans-serif;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
   }
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
 }
 
 @layer utilities {
@@ -25,3 +39,27 @@ body {
     text-wrap: balance;
   }
 }
+
+.custom-cursor {
+  width: 40px; /* Adjust size as needed */
+  height: 40px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: fixed;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+}
+
+.cursor-trail {
+  width: 15px;
+  height: 20px;
+  border-radius: 75%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9998;
+  mix-blend-mode: difference;
+  transition: transform .2s ease, opacity .2s ease, width 0.1s ease, height 0.1s ease;
+  will-change: transform, opacity, width, height;
+}
+
