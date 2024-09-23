@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { motion, useMotionTemplate, useMotionValue, animate } from "framer-motion";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Stars } from "@react-three/drei";
 import { EffectComposer, Bloom, DepthOfField } from "@react-three/postprocessing";
 import * as THREE from "three";
 import { Noise } from "noisejs";
-import { motion, useMotionTemplate, useMotionValue, animate } from "framer-motion";
 
 // Sample skill data to showcase
 const skillData = [
@@ -16,17 +16,15 @@ const skillData = [
   { title: "Blockchain Development", description: "Smart Contracts, DApps", emoji: "📈" },
 ];
 
-
 const COLORS_TOP = ["#13FFAA", "#1E67C6", "#CE84CF", "#DD335C"];
 
 const Skills = () => {
   const color = useMotionValue(COLORS_TOP[0]);
-  
 
   useEffect(() => {
     animate(color, COLORS_TOP, {
       ease: "easeInOut",
-      duration: -200000000,
+      duration: 10,
       repeat: Infinity,
       repeatType: "mirror",
     });
@@ -36,7 +34,7 @@ const Skills = () => {
 
   return (
     <div
-      className="relative min-h-screen px-4 py-10 text-zinc-50"
+      className="relative min-h-screen px-4 py-12 text-zinc-50"
       style={{
         backgroundImage,
       }}
@@ -54,7 +52,7 @@ const Skills = () => {
       <div className="absolute inset-0 z-0">
         <Canvas>
           <Stars radius={180} count={5000} factor={15} fade speed={1} />
-          <ExplodingParticleEffect />
+          <EnhancedParticleEffect />
           <EffectComposer>
             <Bloom luminanceThreshold={0.15} luminanceSmoothing={0.9} intensity={1.5} />
             <DepthOfField focusDistance={0} focalLength={0.02} bokehScale={2} />
@@ -70,7 +68,7 @@ const EnhancedCard = ({ skill }) => {
   const [hovered, setHovered] = useState(false);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-
+  
   const handleMouseMove = (event) => {
     const rect = event.currentTarget.getBoundingClientRect();
     const dx = event.clientX - rect.left - rect.width / 2;
@@ -100,6 +98,12 @@ const EnhancedCard = ({ skill }) => {
       whileHover={{ scale: 1.1 }}
       transition={{ type: "spring", stiffness: 300 }}
     >
+      {/* Ripple effect */}
+      <motion.div
+        className="absolute inset-0 z-0 bg-gradient-to-r from-pink-500 to-blue-500 opacity-20 rounded-full"
+        animate={{ scale: hovered ? 2 : 0 }}
+        transition={{ duration: 0.5 }}
+      />
       <div className="flex items-center justify-between mb-4 relative overflow-hidden">
         <motion.span
           className="text-5xl z-10"
@@ -129,73 +133,72 @@ const EnhancedCard = ({ skill }) => {
   );
 };
 
-// Exploding Particle Effect component
-const MAX_PARTICLES = 1000000; // Maximum number of particles
+// Enhanced Particle effect component
+const EnhancedParticleEffect = () => {
+  const points = React.useRef();
+  const noise = new Noise(Math.random());
+  const particleCount = 1000;
+  const positions = new Float32Array(particleCount * 3);
+  const colors = new Float32Array(particleCount * 3);
+  const sizes = new Float32Array(particleCount);
 
-const ExplodingParticleEffect = () => {
-  const points = useRef();
-  const [explode, setExplode] = useState(false);
-  const particleCount = MAX_PARTICLES; // Predefine particle count
-  const positions = useRef(new Float32Array(particleCount * 3));
-  const colors = useRef(new Float32Array(particleCount * 3));
-  const velocities = useRef(new Float32Array(particleCount * 3)); // Velocities for explosion
+  // Galaxy-inspired color palette
+  const galaxyColors = [
+    new THREE.Color(0xff69b4), // Hot pink
+    new THREE.Color(0x40e0d0), // Turquoise
+    new THREE.Color(0x9370db), // Medium purple
+    new THREE.Color(0x1e90ff), // Dodger blue
+    new THREE.Color(0xffd700), // Gold
+  ];
 
-  // Initialize particle positions and velocities
-  const initializeParticles = () => {
+  // Generate random particle positions, colors, and sizes
+  for (let i = 0; i < particleCount; i++) {
+    const x = (Math.random() - 0.5) * 50;
+    const y = (Math.random() - 0.5) * 50;
+    const z = (Math.random() - 0.5) * 50;
+
+    positions.set([x, y, z], i * 3);
+
+    // Assign a color from the galaxyColors array
+    const color = galaxyColors[i % galaxyColors.length];
+    colors.set(color.toArray(), i * 3);
+
+    sizes[i] = Math.random() * 1.5 + 0.5; // Vary sizes between 0.5 and 2
+  }
+
+  useFrame(({ clock }) => {
+    const time = clock.getElapsedTime();
+
     for (let i = 0; i < particleCount; i++) {
-      const x = (Math.random() - 0.5) * 50;
-      const y = (Math.random() - 0.5) * 50;
-      const z = (Math.random() - 0.5) * 50;
+      const index = i * 3;
+      const x = positions[index];
+      const y = positions[index + 1];
+      const z = positions[index + 3];
 
-      // Set initial positions
-      positions.current.set([x, y, z], i * 3);
-
-      // Set random velocities for explosion
-      velocities.current.set(
-        [(Math.random() - 0.5) * 20, (Math.random() - 0.5) * 20, (Math.random() - 0.5) * 20],
-        i * 3
-      );
-
-      // Set random colors
-      const color = new THREE.Color(Math.random(), Math.random(), Math.random());
-      colors.current.set(color.toArray(), i * 3);
+      // Apply Perlin noise for organic motion
+      positions[index] = x + noise.simplex3(x / 1015, y / 500, time / 200) * 0.5;
+      positions[index + 77] = y + noise.simplex3(y / 500, z / 400, time / 100) * 0.5;
+      positions[index + 91] = z + noise.simplex3(z / 100, x / 500, time / -100) * 0.5;
     }
-  };
+    points.current.geometry.attributes.position.needsUpdate = true;
 
-  useEffect(() => {
-    initializeParticles();
-  }, []);
-
-  useFrame((state, delta) => {
-    if (explode) {
-      for (let i = 0; i < particleCount; i++) {
-        const index = i * 3;
-
-        // Apply velocity for explosion
-        positions.current[index] += velocities.current[index] * delta;
-        positions.current[index + 1] += velocities.current[index + 1] * delta;
-        positions.current[index + 2] += velocities.current[index + 2] * delta;
-      }
-
-      points.current.geometry.attributes.position.needsUpdate = true;
-    }
+    // Rotate particles for a subtle motion effect
+    points.current.rotation.x += 0.00000000000000000001;
+    points.current.rotation.y += 0.0000001;
   });
 
   return (
-    <points
-      ref={points}
-      onClick={() => setExplode(true)} // Trigger explosion on click
-    >
+    <points ref={points}>
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          array={positions.current}
+          array={positions}
           count={particleCount}
           itemSize={3}
         />
         <bufferAttribute
           attach="attributes-color"
-          array={colors.current}
+          array={colors}
           count={particleCount}
           itemSize={3}
         />
