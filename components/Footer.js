@@ -17,12 +17,37 @@ const Footer = () => {
           <div className="w-full md:w-1/3 mb-8 md:mb-0">
             <h4 className="text-xl font-semibold text-white mb-4">Quick Links</h4>
             <ul className="space-y-2">
-              <li><Link href="#about" className="text-gray-400 hover:text-white transition-colors">About Me</Link></li>
-              <li><Link href="#projects" className="text-gray-400 hover:text-white transition-colors">Projects</Link></li>
-              <li><Link href="/skills" className="text-gray-400 hover:text-white transition-colors">Skills</Link></li>
-              <li><Link href="#contact" className="text-gray-400 hover:text-white transition-colors">Contact</Link></li>
-              <li><Link href="/privacy-policy" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</Link></li>
-              <li><Link href="/terms-of-service" className="text-gray-400 hover:text-white transition-colors">Terms of Service</Link></li>
+              {/* Updated About Me link to point to /about page */}
+              <li>
+                <Link href="/about" className="text-gray-400 hover:text-white transition-colors">
+                  About Me
+                </Link>
+              </li>
+              <li>
+                <Link href="#projects" className="text-gray-400 hover:text-white transition-colors">
+                  Projects
+                </Link>
+              </li>
+              <li>
+                <Link href="/skills" className="text-gray-400 hover:text-white transition-colors">
+                  Skills
+                </Link>
+              </li>
+              <li>
+                <Link href="#contact" className="text-gray-400 hover:text-white transition-colors">
+                  Contact
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy-policy" className="text-gray-400 hover:text-white transition-colors">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms-of-service" className="text-gray-400 hover:text-white transition-colors">
+                  Terms of Service
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -46,7 +71,7 @@ const Footer = () => {
             </form>
             <div className="flex space-x-6">
               <a 
-                href="https://github.com/yourprofile" 
+                href="https://github.com/Malik12052" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 aria-label="GitHub Profile"
