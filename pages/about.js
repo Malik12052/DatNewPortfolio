@@ -27,9 +27,11 @@ const InteractiveBackground = () => {
 
   useFrame((state, delta) => {
     if (meshRef.current) {
-      meshRef.current.rotation.x = state.mouse.y * 0.05;
-      meshRef.current.rotation.y = state.mouse.x * 0.05;
-      meshRef.current.scale.set(1 + state.mouse.x * 0.05, 1 + state.mouse.y * 0.05, 1);
+      meshRef.current.rotation.x += delta * 0.2;
+      meshRef.current.rotation.y += delta * 0.3;
+      meshRef.current.scale.x = 1 + Math.sin(state.clock.elapsedTime) * 0.1;
+      meshRef.current.scale.y = 1 + Math.cos(state.clock.elapsedTime) * 0.1;
+      meshRef.current.scale.z = 1 + Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
     }
 
     if (materialRef.current) {
@@ -37,8 +39,10 @@ const InteractiveBackground = () => {
     }
 
     if (sphereRef.current) {
-      sphereRef.current.rotation.x = state.mouse.y * 0.05;
-      sphereRef.current.rotation.y = state.mouse.x * 0.05;
+      sphereRef.current.rotation.x += delta * 0.3;
+      sphereRef.current.rotation.y += delta * 0.4;
+      sphereRef.current.position.y = Math.sin(state.clock.elapsedTime) * 5 + 20;
+      sphereRef.current.position.x = Math.cos(state.clock.elapsedTime * 0.5) * 5 + 25;
     }
 
     if (sphereMaterialRef.current) {
@@ -72,8 +76,8 @@ const InteractiveBackground = () => {
             void main() {
               float t = vUv.x + vUv.y - time * stripeSpeed;
               float stripePattern = step(fract(t / stripeWidth), 0.5);
-              vec3 color1 = vec3(0.07, 1.0, 0.67);
-              vec3 color2 = vec3(0.12, 0.40, 0.78);
+              vec3 color1 = vec3(0.0);
+              vec3 color2 = vec3(1.0);
               vec3 finalColor = mix(color1, color2, stripePattern);
               gl_FragColor = vec4(finalColor, 1.0);
             }
@@ -81,7 +85,7 @@ const InteractiveBackground = () => {
         />
       </mesh>
 
-      <mesh ref={sphereRef} position={[25, 15, 0]}>
+      <mesh ref={sphereRef} position={[25, 20, 0]}>
         <sphereGeometry args={[5, 32, 32]} />
         <shaderMaterial
           ref={sphereMaterialRef}
@@ -89,7 +93,6 @@ const InteractiveBackground = () => {
             time: { value: 0 },
             stripeWidth: { value: 0.2 },
             stripeSpeed: { value: 0.5 },
-            color: { value: new THREE.Color("#DD335C") },
           }}
           vertexShader={`
             varying vec2 vUv;
@@ -104,7 +107,6 @@ const InteractiveBackground = () => {
             uniform float time;
             uniform float stripeWidth;
             uniform float stripeSpeed;
-            uniform vec3 color;
             varying vec2 vUv;
             varying vec3 vNormal;
             void main() {
@@ -112,7 +114,9 @@ const InteractiveBackground = () => {
               float stripePattern = step(fract(t / stripeWidth), 0.5);
               vec3 lightDir = normalize(vec3(1.0, 1.0, 1.0));
               float diffuse = max(dot(vNormal, lightDir), 0.0);
-              vec3 finalColor = mix(color, vec3(1.0), stripePattern);
+              vec3 color1 = vec3(0.0);
+              vec3 color2 = vec3(1.0);
+              vec3 finalColor = mix(color1, color2, stripePattern);
               finalColor *= (0.5 + 0.5 * diffuse);
               gl_FragColor = vec4(finalColor, 1.0);
             }
@@ -121,7 +125,7 @@ const InteractiveBackground = () => {
       </mesh>
 
 
-      <Html position={[-20, 0, 0]} transform occlude>
+      <Html position={[-35, 0, 0]} transform occlude>
         <motion.div
           style={{
             display: 'flex',
@@ -130,28 +134,32 @@ const InteractiveBackground = () => {
             justifyContent: 'center',
           }}
           animate={{
-            x: [-5, 5, -5],
+            x: [-10, 30, -10],
+            y: [-5, 5, -5],
           }}
           transition={{
-            duration: 2,
+            duration: 3,
             repeat: Infinity,
             ease: "easeInOut",
           }}
         >
           <motion.div
             style={{
-              width: '100px',
-              height: '50px',
+              width: '350px',
+              height: '150px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               position: 'relative',
+              borderRadius: '2900px',
             }}
             animate={{
               backgroundColor: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FF6B6B'],
+              scale: [1, 1.1, 1],
+              rotate: [0, 5, -5, 0],
             }}
             transition={{
-              duration: 3,
+              duration: 5,
               repeat: Infinity,
               ease: "easeInOut",
             }}
@@ -159,17 +167,17 @@ const InteractiveBackground = () => {
             <motion.div
               style={{
                 position: 'absolute',
-                right: '-20px',
+                right: '-150px',
                 width: 0,
                 height: 0,
-                borderTop: '25px solid transparent',
-                borderBottom: '25px solid transparent',
+                borderTop: '75px solid transparent',
+                borderBottom: '75px solid transparent',
               }}
               animate={{
-                borderLeft: ['40px solid #FF6B6B', '40px solid #4ECDC4', '40px solid #45B7D1', '40px solid #FF6B6B'],
+                borderLeft: ['120px solid #FF6B6B', '120px solid #4ECDC4', '120px solid #45B7D1', '120px solid #FF6B6B'],
               }}
               transition={{
-                duration: 3,
+                duration: 5,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
@@ -178,11 +186,19 @@ const InteractiveBackground = () => {
               style={{
                 margin: 0,
                 fontWeight: 'bold',
-                fontSize: '16px',
+                fontSize: '48px',
                 color: 'white',
               }}
+              animate={{
+                scale: [1.5, 1.2, 1],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
             >
-              Click Me!
+              Click Me
             </motion.p>
           </motion.div>
         </motion.div>
@@ -210,6 +226,10 @@ const InfiniteStars = () => {
 
 const FloatingText = () => {
   const textRef = useRef();
+  const [isVisible, setIsVisible] = useState(false);
+
+  const handleMouseEnter = () => setIsVisible(true);
+  const handleMouseLeave = () => setIsVisible(false);
 
   useFrame(({ clock }) => {
     if (textRef.current) {
@@ -222,15 +242,16 @@ const FloatingText = () => {
       ref={textRef}
       position={[0, 10, 0]}
       fontSize={2}
-      color="#ffffff"
+      color={isVisible ? "#ffffff" : "transparent"}
       anchorX="center"
       anchorY="middle"
+      onPointerEnter={handleMouseEnter}
+      onPointerLeave={handleMouseLeave}
     >
-      {/* Welcome to My World */}
+     
     </Text>
   );
 };
-
 const AboutPage = () => {
   const color = useMotionValue(COLORS_TOP[0]);
 
@@ -261,7 +282,7 @@ const AboutPage = () => {
       }}
     >
       <div className="absolute inset-0 z-0">
-        <Canvas camera={{ position: [0, 0, 20] }}>
+        <Canvas camera={{ position: [0, 0, 40] }}>
           <ambientLight intensity={0.5} />
           <pointLight position={[10, 10, 10]} />
           <InfiniteStars />
@@ -299,3 +320,17 @@ const AboutPage = () => {
 };
 
 export default AboutPage;
+
+import { useLoader } from '@react-three/fiber';
+import { TextureLoader } from 'three';
+
+const MyObject = () => {
+  const texture = useLoader(TextureLoader, '/path/to/your/pattern.png');
+
+  return (
+    <mesh>
+      <boxGeometry />
+      <meshBasicMaterial map={texture} />
+    </mesh>
+  );
+};
