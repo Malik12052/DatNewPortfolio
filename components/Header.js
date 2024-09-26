@@ -2,6 +2,7 @@ import { SiInstagram, SiLinkedin, SiTwitter, SiYoutube } from "react-icons/si";
 import React, { useState, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
+import ConnectButton from "./ConnectButton";
 
 const Example = () => {
   return (
@@ -16,6 +17,7 @@ const Nav = () => {
 
   return (
     <>
+      <ConnectButton />
       <HamburgerButton active={active} setActive={setActive} />
       <AnimatePresence>
         {active && <LinksOverlay setActive={setActive} />}
@@ -67,6 +69,7 @@ const NavLink = ({ children, href, setActive }) => {
       className="block text-5xl font-semibold text-violet-400 transition-colors hover:text-violet-50 md:text-7xl"
     >
       {children}
+    
     </motion.a>
   );
 };
@@ -91,6 +94,7 @@ const HamburgerButton = ({ active, setActive }) => {
       }`}
     >
       <audio ref={audioRef} src="/click-sound.mp3" />
+     
       <motion.div
         className="absolute block h-1 w-10 bg-white"
         style={{
@@ -100,6 +104,7 @@ const HamburgerButton = ({ active, setActive }) => {
           transformOrigin: "center",
         }}
       />
+      
       <motion.div
         className="absolute block h-1 w-10 bg-white"
         style={{
@@ -134,7 +139,7 @@ const FooterCTAs = () => {
 
 
 const LINKS = [
-  { title: "home", href: "#" },
+  { title: "home", href: "/" },
   {title: "skills", href: "/skills"},
   { title: "features", href: "#" },
   { title: "blog", href: "#" },

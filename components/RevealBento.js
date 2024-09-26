@@ -71,7 +71,7 @@ export const RevealBento = () => {
 
       <div className="absolute inset-0 z-0">
         <Canvas camera={{ position: [0, 0, 10] }}>
-          <Stars radius={120} count={3000} factor={20} saturation={0.5} fade speed={0.8} />
+          <Stars radius={150} count={7000} factor={40} fade speed={0.75} />
           <Particles />
           <SphereAnimation />
         </Canvas>
