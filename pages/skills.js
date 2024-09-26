@@ -140,7 +140,8 @@ const EnhancedParticleEffect = () => {
   const particleCount = 1000;
   const positions = new Float32Array(particleCount * 3);
   const colors = new Float32Array(particleCount * 3);
-  const sizes = new Float32Array(particleCount);
+  const sizes = new Float32Array(particleCount );
+  const originalPositions = new Float32Array(particleCount * 3);
 
   // Galaxy-inspired color palette
   const galaxyColors = [
@@ -158,6 +159,7 @@ const EnhancedParticleEffect = () => {
     const z = (Math.random() - 0.5) * 50;
 
     positions.set([x, y, z], i * 3);
+    originalPositions.set([x, y, z], i * 3);
 
     // Assign a color from the galaxyColors array
     const color = galaxyColors[i % galaxyColors.length];
@@ -171,20 +173,31 @@ const EnhancedParticleEffect = () => {
 
     for (let i = 0; i < particleCount; i++) {
       const index = i * 3;
-      const x = positions[index];
-      const y = positions[index + 1];
-      const z = positions[index + 3];
+
+
+
+      const originalX = originalPositions[index];
+      const originalY = originalPositions[index + 1];
+      const originalZ = originalPositions[index + 2];
 
       // Apply Perlin noise for organic motion
-      positions[index] = x + noise.simplex3(x / 1015, y / 500, time / 200) * 0.5;
-      positions[index + 77] = y + noise.simplex3(y / 500, z / 400, time / 100) * 0.5;
-      positions[index + 91] = z + noise.simplex3(z / 100, x / 500, time / -100) * 0.5;
+
+
+
+      const noiseX = noise.simplex3(originalX / 1015, originalY / 500, time / 200) * 2;
+      const noiseY = noise.simplex3(originalY / 500, originalZ / 400, time / 100) * 2;
+      const noiseZ = noise.simplex3(originalZ / 100, originalX / 500, time / -100) * 2;
+
+      // Calculate new positions with a return-to-origin behavior
+      positions[index] = originalX + noiseX * Math.sin(time);
+      positions[index + 1] = originalY + noiseY * Math.sin(time);
+      positions[index + 2] = originalZ + noiseZ * Math.sin(time);
     }
     points.current.geometry.attributes.position.needsUpdate = true;
 
     // Rotate particles for a subtle motion effect
-    points.current.rotation.x += 0.00000000000000000001;
-    points.current.rotation.y += 0.0000001;
+    points.current.rotation.x += 0.001;
+    points.current.rotation.y += 0.00001;
   });
 
   return (
@@ -213,5 +226,6 @@ const EnhancedParticleEffect = () => {
     </points>
   );
 };
+
 
 export default Skills;

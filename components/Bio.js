@@ -50,7 +50,7 @@ export const Bio = () => {
 
       <div className="absolute inset-0 z-0">
         <Canvas>
-          <Stars radius={150} count={5000} factor={35} fade speed={1} />
+          <Stars radius={150} count={5000} factor={35} fade speed={0.5} />
         </Canvas>
       </div>
     </div>

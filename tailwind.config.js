@@ -12,9 +12,10 @@ module.exports = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
-    },
-    fontFamily: {
-      matemasie: ['Matemasie', 'sans-serif'], // Register the Matemasie font
+      fontFamily: {
+        poppins: ['Poppins', 'sans-serif'], // Register the Poppins font
+        matemasie: ['Matemasie', 'sans-serif'], // Register the Matemasie font
+      },
     },
   },
   plugins: [],

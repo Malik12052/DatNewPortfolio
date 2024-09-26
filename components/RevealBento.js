@@ -45,9 +45,9 @@ export const RevealBento = () => {
     const sphereRef = useRef();
 
     useFrame(() => {
-      sphereRef.current.rotation.x += 0.01;
-      sphereRef.current.rotation.y += 0.01;
-      sphereRef.current.rotation.z += 0.01;
+      sphereRef.current.rotation.x += 0.002;
+      sphereRef.current.rotation.y += 0.002;
+      sphereRef.current.rotation.z += 0.005;
     });
 
     return (

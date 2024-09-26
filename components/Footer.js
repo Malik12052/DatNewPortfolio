@@ -7,6 +7,7 @@ const Footer = () => {
     <footer className="bg-gray-900 text-gray-300 py-12">
       <div className="container mx-auto px-6 md:px-12">
         <div className="flex flex-wrap justify-between items-center">
+          {/* Left Section */}
           <div className="w-full md:w-1/3 mb-8 md:mb-0">
             <h3 className="text-2xl font-bold text-white mb-4">Gabriel Felix</h3>
             <p className="text-gray-400">
@@ -14,17 +15,17 @@ const Footer = () => {
             </p>
           </div>
 
+          {/* Center Section - Quick Links */}
           <div className="w-full md:w-1/3 mb-8 md:mb-0">
             <h4 className="text-xl font-semibold text-white mb-4">Quick Links</h4>
             <ul className="space-y-2">
-              {/* Updated About Me link to point to /about page */}
               <li>
                 <Link href="/about" className="text-gray-400 hover:text-white transition-colors">
                   About Me
                 </Link>
               </li>
               <li>
-                <Link href="#projects" className="text-gray-400 hover:text-white transition-colors">
+                <Link href="/projects" className="text-gray-400 hover:text-white transition-colors">
                   Projects
                 </Link>
               </li>
@@ -34,7 +35,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="#contact" className="text-gray-400 hover:text-white transition-colors">
+                <Link href="/contact" className="text-gray-400 hover:text-white transition-colors">
                   Contact
                 </Link>
               </li>
@@ -51,6 +52,7 @@ const Footer = () => {
             </ul>
           </div>
 
+          {/* Right Section - Contact and Socials */}
           <div className="w-full md:w-1/3">
             <h4 className="text-xl font-semibold text-white mb-4">Get In Touch</h4>
             <p className="text-gray-400 mb-4">
@@ -108,6 +110,7 @@ const Footer = () => {
           </div>
         </div>
 
+        {/* Footer Bottom */}
         <div className="mt-12 border-t border-gray-800 pt-8">
           <p className="text-center text-gray-500">
             &copy; {new Date().getFullYear()} Gabriel Felix. All rights reserved.
